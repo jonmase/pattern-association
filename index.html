@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="pattern">
+	<head>
+		<title>Pattern Association Model</title>
+		<link rel="stylesheet" type="text/css" href="styles/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="styles/fonts/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="styles/css/style.css" />
+	</head>
+	<body ng-controller="MainController as mainCtrl">
+		<div class="row">
+			<div class="col-sm-6">
+				<table>
+					<tr>
+						<th>cond\uncond</th>
+						<th ng-repeat="(uncondId, uncondValue) in mainCtrl.stimuli.unconditioned track by $index">
+							{{uncondValue}}
+							<input type="checkbox" ng-model="mainCtrl.stimuli.unconditioned[uncondId]" ng-true-value="1" ng-false-value="0" ng-change="mainCtrl.setUncondValue(uncondId)">
+						</th>
+					</tr>
+					<tr ng-repeat="(condId, condValue) in mainCtrl.stimuli.conditioned track by $index">
+						<th>
+							{{condValue}}
+							<input type="checkbox" ng-model="mainCtrl.stimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="mainCtrl.setCondValue(condId)">
+						</th>
+						<td ng-repeat="(uncondId, synapseValue) in mainCtrl.synapses.temp[condId] track by $index">
+							<input type="text" ng-model="mainCtrl.synapses.temp[condId][uncondId]" style="width: 20px;" disabled="true" />
+						</td>
+					</tr>
+				</table>
+		
+				<button class="btn btn-default" type="submit" ng-click="mainCtrl.clearStimuli();">Clear Stimuli</button>
+				<button class="btn btn-primary" type="submit" ng-click="mainCtrl.learnStimuli();">Learn Stimuli</button>
+			</div>
+			<div class="col-sm-6">
+				<p>Pairs: {{mainCtrl.pairs.length}}</p>
+				<p ng-repeat="pair in mainCtrl.pairs track by $index">{{pair}}</p>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="scripts/lib/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/bootstrap.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/angular.min.js"></script>
+		<script type="text/javascript" src="scripts/data.js"></script>
+		<script type="text/javascript" src="scripts/services/learningServices.js"></script>
+		<script type="text/javascript" src="scripts/app.js"></script>
+		<script type="text/javascript" src="scripts/services/constants.js"></script>
+		<script type="text/javascript" src="scripts/controllers/mainController.js"></script>
+	</body>
+</html>
