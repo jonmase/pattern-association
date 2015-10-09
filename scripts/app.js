@@ -1,3 +1,3 @@
 (function() {
-	var app = angular.module('pattern', ['pattern.learning']);
+	var app = angular.module('pattern', ['pattern.learning', 'pattern.recall']);
 })();
