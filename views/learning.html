@@ -1,0 +1,30 @@
+<h3>Learning</h3>
+<div ng-controller="LearningController as learningCtrl" class="row">
+	<div class="col-sm-6">
+		<table>
+			<tr>
+				<th>cond\uncond</th>
+				<th ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+					{{uncondValue}}
+					<input type="checkbox" ng-model="learningCtrl.stimuli.unconditioned[uncondId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setUncondValue(uncondId)">
+				</th>
+			</tr>
+			<tr ng-repeat="(condId, condValue) in learningCtrl.stimuli.conditioned track by $index">
+				<th>
+					{{condValue}}
+					<input type="checkbox" ng-model="learningCtrl.stimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setCondValue(condId)">
+				</th>
+				<td ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
+					<input type="text" ng-model="learningCtrl.synapses.temp[condId][uncondId]" style="width: 20px;" disabled="true" />
+				</td>
+			</tr>
+		</table>
+
+		<button class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
+		<button class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
+	</div>
+	<div class="col-sm-6">
+		<p>Pairs: {{learningCtrl.pairs.length}}</p>
+		<p ng-repeat="pair in learningCtrl.pairs track by $index">{{pair}}</p>
+	</div>
+</div>

@@ -1,10 +1,10 @@
 (function() {
-	var app = angular.module('pattern')
-		.controller('MainController', MainController);
+	var app = angular.module('pattern.learning', [])
+		.controller('LearningController', LearningController);
 
-	MainController.$inject = ['learningFactory'];
+	LearningController.$inject = ['learningFactory'];
 	
-	function MainController(learningFactory) {
+	function LearningController(learningFactory) {
 		var vm = this;
 		
 		//Bindable Members - values

@@ -1,15 +1,17 @@
 (function() {
-	angular.module('pattern.learning', [])
+	angular.module('pattern.learning')
 		.factory('learningFactory', learningFactory);
 		
 	learningFactory.$inject = ['rows', 'cols'];
 
 	function learningFactory(rows, cols) {
+		//Variables
 		//var stimuli = initialiseStimuli();	//For production, start with blank stimuli
 		var stimuli = initialiseRandomStimuli();	//For development, start with some random stimuli set
 		var synapses = initialiseSynapses();	//Set up the blank synapses array
 		var stimulusPairs = initialiseStimulusPairs();	//Set up the stimulus pairs array
 
+		//Exposed Methods
 		var factory = {
 			clearStimuli: clearStimuli,
 			getStimuli: getStimuli,
@@ -22,6 +24,7 @@
 		}
 		return factory;
 		
+		//Methods
 		//Clear the stimuli and reset the synapses to their saved values
 		function clearStimuli() {
 			//Reset all the stimuli to 0
