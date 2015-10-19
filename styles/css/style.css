@@ -18,6 +18,10 @@ padding: 2px;
     color: #999;
 }
 
+th.uncond-row{
+	width: 42px;
+}
+
 .panel-tabs > li {
     float: left;
     margin-bottom: -1px;

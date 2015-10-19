@@ -18,6 +18,7 @@
 		//var recallStimulusPairs = initialiseStimulusPairs();  //Set up the recalledStimulus pairs array
 
 		var binaryThreshold = initialiseBinaryThreshold();
+		var chanceofSynapseDeath = initialiseChanceofSynapseDeath();
 
 		//Exposed Methods
 		var factory = {
@@ -26,6 +27,7 @@
 			getStimulusPairs: getStimulusPairs,
 			getSynapses: getSynapses,
 			getBinaryThreshold: getBinaryThreshold,
+			getChanceOfDeath: getChanceOfDeath,
 			learnStimuli: learnStimuli,
 			setAllSynapseValues: setAllSynapseValues,
 			setCondValue: setCondValue,
@@ -79,6 +81,15 @@
 		function initialiseBinaryThreshold(){
 			var binaryThreshold={threshold:2};
 			return binaryThreshold;
+		};
+
+		function getChanceOfDeath() { 
+			return chanceOfDeath;
+		};
+		
+		function initialiseChanceOfDeath(){
+			var chanceOfDeath={chance:0.1};
+			return chanceOfDeath;
 		};
 
 		//Set some of the stimuli at random

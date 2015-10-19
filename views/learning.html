@@ -23,13 +23,13 @@
 					<table class="">
 						<tr ng-show="progressCtrl.isStage(1)"> <!--row for input of unconditioned stimuli -->
 							<th>cond\uncond</th>
-							<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+							<th class="text-center uncond-row" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
 								<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.stimuli.unconditioned[uncondId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setUncondValue(uncondId)">
 							</th>
 						</tr>
 						<tr ng-show="progressCtrl.isStage(2)"> <!--row for output of firing rate -->
 							<th>Firing rate:</th>
-							<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+							<th class="text-center uncond-row" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
 								{{learningCtrl.recallStimuli.firing_rate[uncondId]}}
 							</th>
 						</tr>
@@ -60,7 +60,7 @@
 					    		<label for="binaryThreshold">Binary threshold</label>
 					    		<input id="binaryThreshold" class="form-control" type="number" ng-model="learningCtrl.binaryThreshold.threshold" min="1" max="99" ng-click="learningCtrl.setRecallCondValue()" ng-change="learningCtrl.setRecallCondValue()">
 							</div>
-							<span class="pull-right"><button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button></span>
+							<button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button>
 						</form>
 						<button ng-show="progressCtrl.isStage(1)" class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
 						<button ng-show="progressCtrl.isStage(1)" class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
