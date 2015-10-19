@@ -206,6 +206,7 @@
 						conditioned: angular.copy(recallStimuli.conditioned),
 						firing_rate: angular.copy(recallStimuli.firing_rate),
 						binary_threshold: binaryThreshold.threshold,
+						chance_of_synapse_death: chanceOfSynapseDeath.chance,
 						matched: matched
 						});
 					}
@@ -230,6 +231,7 @@
 					conditioned: angular.copy(recallStimuli.conditioned),
 					firing_rate: angular.copy(recallStimuli.firing_rate),
 					binary_threshold: binaryThreshold.threshold,
+					chance_of_synapse_death: chanceOfSynapseDeath.chance,
 					matched: "false" //can't match an unlearnt stimulus
 					});
 

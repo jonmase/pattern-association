@@ -40,6 +40,7 @@
 				        		{field:"activation"},
 				        		{field:"firing_rate"},
 				        		{field:"binary_threshold"},
+				        		{field:"chance_of_synapse_death"},
 				        		{
             						field:"matched",
             						cellTemplate: '<div class="ui-grid-cell-contents"><i class=\'fa fa-{{ row.entity.matched=="true"?"check":"times" }} fa-lg\'></i></div>'
