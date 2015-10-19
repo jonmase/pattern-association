@@ -1,70 +1,89 @@
 <div class="row">
-	<div class="col-sm-3">
-		<div class="panel panel-default">
-		  	<div class="panel-heading">
-		    	<h3 class="panel-title">Control Panel</h3>
-		  	</div>
-		  	<div class="panel-body">
-		    	<form class="form-inline">
-					<div class="form-group" ng-show="progressCtrl.isStage(2)" >
-			    		<label for="binaryThreshold">Binary threshold</label>
-			    		<input id="binaryThreshold" class="form-control" type="number" ng-model="learningCtrl.binaryThreshold.threshold" min="1" max="99" ng-click="learningCtrl.setRecallCondValue()" ng-change="learningCtrl.setRecallCondValue()">
-					</div>
-				</form>
-
-				<button ng-show="progressCtrl.isStage(1)" class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
-				<button ng-show="progressCtrl.isStage(1)" class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
-				<button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button>
-		  	</div>
-		</div>
+	<div class="col-sm-12">
+		<h1>Pattern Association Memory</h1>
 	</div>
-	<div class="col-sm-9">
-		<ul class="nav nav-tabs">
-	  	<li role="presentation" ng-class="{active: progressCtrl.isStage(1)}"><a ng-click="progressCtrl.setStage(1)" href="#">Learn</a></li>
-	  	<li role="presentation" ng-show="learningCtrl.pairs.length>0" ng-class="{active: progressCtrl.isStage(2)}"><a ng-click="progressCtrl.setStage(2)" href="#">Recall</a></li>
-	  	<!--li role="presentation"><a href="#">Instructions</a></li-->
-	  	<!--li role="presentation"><a href="#">Setup</a></li-->
-		</ul>
-		<div class="table-responsive">
-			<table class="">
-				<tr ng-show="progressCtrl.isStage(1)"> <!--row for input of unconditioned stimuli -->
-					<th>cond\uncond</th>
-					<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
-						<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.stimuli.unconditioned[uncondId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setUncondValue(uncondId)">
-					</th>
-				</tr>
-				<tr ng-show="progressCtrl.isStage(2)"> <!--row for output of firing rate -->
-					<th>Firing rate:</th>
-					<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
-						{{learningCtrl.recallStimuli.firing_rate[uncondId]}}
-					</th>
-				</tr>
-				<tr ng-show="progressCtrl.isStage(2)"> <!--row for output of activation -->
-					<th>Activation:</th>
-					<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
-						{{learningCtrl.recallStimuli.activation[uncondId]}}
-					</th>
-				</tr>
-				<tr ng-repeat="(condId, condValue) in learningCtrl.stimuli.conditioned track by $index">
-					<th ng-show="progressCtrl.isStage(1)" class="text-center">
-						<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.stimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setCondValue(condId)">
-					</th>
-					<th ng-show="progressCtrl.isStage(2)" class="text-center">
-						<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.recallStimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setRecallCondValue()">
-					</th>
-					<td class="text-center" ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
-						{{learningCtrl.synapses.temp[condId][uncondId]}}
-						<!--input type="text" ng-model="learningCtrl.synapses.temp[condId][uncondId]" style="width: 20px;" disabled="true" /-->
-					</td>
-				</tr>
-			</table>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-primary">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">Neuron
+		    	<span class="pull-right">
+			    	<ul class="nav panel-tabs">
+					  	<li role="presentation" ng-class="{active: progressCtrl.isStage(1)}"><a ng-click="progressCtrl.setStage(1)" href="#">Learn</a></li>
+					  	<li role="presentation" ng-class="{active: progressCtrl.isStage(2), disabled: learningCtrl.pairs.length==0}"><a ng-click="progressCtrl.setStage(2)" href="#">Recall</a></li>
+					  	<!--li role="presentation"><a href="#">Instructions</a></li-->
+					  	<!--li role="presentation"><a href="#">Setup</a></li-->
+					</ul>
+				</span>
+				</h3>
+			</div>
+		  	<div class="panel-body">
+				<div class="table-responsive pull-left">
+					<table class="">
+						<tr ng-show="progressCtrl.isStage(1)"> <!--row for input of unconditioned stimuli -->
+							<th>cond\uncond</th>
+							<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+								<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.stimuli.unconditioned[uncondId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setUncondValue(uncondId)">
+							</th>
+						</tr>
+						<tr ng-show="progressCtrl.isStage(2)"> <!--row for output of firing rate -->
+							<th>Firing rate:</th>
+							<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+								{{learningCtrl.recallStimuli.firing_rate[uncondId]}}
+							</th>
+						</tr>
+						<tr ng-show="progressCtrl.isStage(2)"> <!--row for output of activation -->
+							<th>Activation:</th>
+							<th class="text-center" ng-repeat="(uncondId, uncondValue) in learningCtrl.stimuli.unconditioned track by $index">
+								{{learningCtrl.recallStimuli.activation[uncondId]}}
+							</th>
+						</tr>
+						<tr ng-repeat="(condId, condValue) in learningCtrl.stimuli.conditioned track by $index">
+							<th ng-show="progressCtrl.isStage(1)" class="text-center">
+								<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.stimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setCondValue(condId)">
+							</th>
+							<th ng-show="progressCtrl.isStage(2)" class="text-center">
+								<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.recallStimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setRecallCondValue()">
+							</th>
+							<td class="text-center" ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
+								{{learningCtrl.synapses.temp[condId][uncondId]}}
+								<!--input type="text" ng-model="learningCtrl.synapses.temp[condId][uncondId]" style="width: 20px;" disabled="true" /-->
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="panel panel-primary pull-right">
+				  	<div class="panel-body">
+				    	<form class="form-inline">
+							<div class="form-group" ng-show="progressCtrl.isStage(2)" >
+					    		<label for="binaryThreshold">Binary threshold</label>
+					    		<input id="binaryThreshold" class="form-control" type="number" ng-model="learningCtrl.binaryThreshold.threshold" min="1" max="99" ng-click="learningCtrl.setRecallCondValue()" ng-change="learningCtrl.setRecallCondValue()">
+							</div>
+							<span class="pull-right"><button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button></span>
+						</form>
+						<button ng-show="progressCtrl.isStage(1)" class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
+						<button ng-show="progressCtrl.isStage(1)" class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
+						
+				  	</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-12">
 		<!--div id="grid1" ui-grid="{ data: learningCtrl.pairs }" class="myGrid"></div-->
-		<div id="grid1" ui-grid="learningCtrl.gridOptions" ui-grid-expandable class="myGrid"></div>
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    			<h3 class="panel-title">Learnt and recalled stimuli</h3>
+  			</div>
+  			<div class="panel-body">
+    			<p>Learnt stimuli will appear automatically. When in <strong>Recall</strong> mode, repopulate the neuron with learnt stimuli by clicking the <button class="btn btn-default btn-xs">Recall</button> button. Click the <i class="ui-grid-icon-plus-squared"></i> to see recall attempts.</p>
+    			<div id="grid1" ui-grid="learningCtrl.gridOptions" ui-grid-expandable class="myGrid"></div>
+  			</div>
+		</div>
+		
 		<!--p>Pairs: {{learningCtrl.pairs.length}}</p-->
 		<!--table class="table table-striped table-condensed">
 			<tr>
