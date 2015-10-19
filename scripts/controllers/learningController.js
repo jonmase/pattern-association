@@ -14,6 +14,7 @@
 		vm.pairs = learningFactory.getStimulusPairs();
 		//vm.recallPairs = learningFactory.getRecallStimulusPairs();
 		vm.binaryThreshold = learningFactory.getBinaryThreshold();
+		vm.chanceOfSynapseDeath = learningFactory.getChanceOfSynapseDeath();
 		
 		//Bindable Members - methods
 		vm.clearStimuli = clearStimuli;
@@ -23,6 +24,7 @@
 		vm.setRecallCondValue = setRecallCondValue;
 		vm.recall = recall;
 		vm.hasLearnt = hasLearnt;
+		vm.killSynapses = killSynapses;
 		$scope.attemptRecall = attemptRecall; //note had to apply this to scope as ui-grid can only speak to its containing scope through grid.appScope below 
 
 		vm.gridOptions = {
@@ -97,6 +99,9 @@
 		};
 		function hasLearnt() {
 			learningFactory.hasLearnt();
+		};
+		function killSynapses() {
+			learningFactory.killSynapses();
 		};
 		function attemptRecall(conditioned) {
 			learningFactory.attemptRecall(conditioned);

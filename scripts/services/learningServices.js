@@ -18,7 +18,7 @@
 		//var recallStimulusPairs = initialiseStimulusPairs();  //Set up the recalledStimulus pairs array
 
 		var binaryThreshold = initialiseBinaryThreshold();
-		var chanceofSynapseDeath = initialiseChanceofSynapseDeath();
+		var chanceOfSynapseDeath = initialiseChanceOfSynapseDeath();
 
 		//Exposed Methods
 		var factory = {
@@ -27,7 +27,7 @@
 			getStimulusPairs: getStimulusPairs,
 			getSynapses: getSynapses,
 			getBinaryThreshold: getBinaryThreshold,
-			getChanceOfDeath: getChanceOfDeath,
+			getChanceOfSynapseDeath: getChanceOfSynapseDeath,
 			learnStimuli: learnStimuli,
 			setAllSynapseValues: setAllSynapseValues,
 			setCondValue: setCondValue,
@@ -37,6 +37,7 @@
 			getRecallStimuli: getRecallStimuli,
 			//getRecallStimulusPairs: getRecallStimulusPairs,
 			hasLearnt: hasLearnt,
+			killSynapses: killSynapses,
 			attemptRecall: attemptRecall
 		};
 		return factory;
@@ -83,13 +84,13 @@
 			return binaryThreshold;
 		};
 
-		function getChanceOfDeath() { 
-			return chanceOfDeath;
+		function getChanceOfSynapseDeath() { 
+			return chanceOfSynapseDeath;
 		};
 		
-		function initialiseChanceOfDeath(){
-			var chanceOfDeath={chance:0.1};
-			return chanceOfDeath;
+		function initialiseChanceOfSynapseDeath(){
+			var chanceOfSynapseDeath={chance:0.00};
+			return chanceOfSynapseDeath;
 		};
 
 		//Set some of the stimuli at random
@@ -129,7 +130,8 @@
 			for(var i = 0; i < rows; i++) {
 				emptySynapses[i] = [];
 				for(var j = 0; j < cols; j++) {
-					emptySynapses[i][j] = 0;
+					emptySynapses[i][j]={state:0,alive:1};
+					//emptySynapses[i][j] = 0;
 				}
 			}
 			
@@ -139,6 +141,22 @@
 			};
 
 			return synapses;
+		};
+
+		//Set up blank synapses (temp and saved)
+		function killSynapses() { 
+			for(var i = 0; i < rows; i++) {
+				for(var j = 0; j < cols; j++) {
+					//var randomComparison = Math.random();
+					if (Math.random()<chanceOfSynapseDeath.chance){
+						synapses.saved[i][j].alive=0;
+						}
+					else{
+						synapses.saved[i][j].alive=1;
+						}
+				}
+			}
+			setRecallCondValue();
 		};
 		
 		//Set up blank RecalledStimuli (temp and saved)
@@ -235,12 +253,13 @@
 
 		//Save the current values of the synapses
 		function saveCurrentSynapseValues() {
+			synapses.saved = angular.copy(synapses.temp);
 			//For each synapse, copy the temp value into the saved array
-			for(var condId = 0; condId < synapses.temp.length; condId++) {
+			/*for(var condId = 0; condId < synapses.temp.length; condId++) {
 				for(var uncondId = 0; uncondId < synapses.temp[condId].length; uncondId++) {
 					synapses.saved[condId][uncondId] = synapses.temp[condId][uncondId];
 				}
-			}
+			}*/
 		};
 		
 		//Update all the synapse values
@@ -266,7 +285,9 @@
 				recallStimuli.firing_rate[uncondId]= 0;
 				for(var condId = 0; condId < rows; condId++) {	
 					if(recallStimuli.conditioned[condId]){
-						recallStimuli.activation[uncondId]+= synapses.saved[condId][uncondId];
+						if(synapses.saved[condId][uncondId].alive==1){ //ie only count 'alive' synapses
+							recallStimuli.activation[uncondId]+= synapses.saved[condId][uncondId].state;
+							}
 						if(recallStimuli.activation[uncondId]>=binaryThreshold.threshold){
 							recallStimuli.firing_rate[uncondId]=1;
 						}else{
@@ -286,7 +307,7 @@
 		
 		//Set a synapse value by adding the result of the current stimuli to the saved value
 		function setSynapseValue(condId, uncondId) {
-			synapses.temp[condId][uncondId] = synapses.saved[condId][uncondId] + stimuli.unconditioned[uncondId] * stimuli.conditioned[condId];
+			synapses.temp[condId][uncondId].state = synapses.saved[condId][uncondId].state + stimuli.unconditioned[uncondId] * stimuli.conditioned[condId];
 		};
 
 		//Do we have at least one saved learn?

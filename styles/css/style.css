@@ -22,6 +22,10 @@ th.uncond-row{
 	width: 42px;
 }
 
+td.deadSynapse{
+	background-color: #f00;
+}
+
 .panel-tabs > li {
     float: left;
     margin-bottom: -1px;

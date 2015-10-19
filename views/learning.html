@@ -46,8 +46,8 @@
 							<th ng-show="progressCtrl.isStage(2)" class="text-center">
 								<input bs-switch switch-on-text="{{ 1 }}" switch-off-text="{{ 0 }}" switch-size="mini" type="checkbox" data-on-text="1" data-off-text="0" ng-model="learningCtrl.recallStimuli.conditioned[condId]" ng-true-value="1" ng-false-value="0" ng-change="learningCtrl.setRecallCondValue()">
 							</th>
-							<td class="text-center" ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
-								{{learningCtrl.synapses.temp[condId][uncondId]}}
+							<td ng-class="{deadSynapse: learningCtrl.synapses.saved[condId][uncondId].alive==0}" class="text-center" ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
+								{{learningCtrl.synapses.temp[condId][uncondId].state}}
 								<!--input type="text" ng-model="learningCtrl.synapses.temp[condId][uncondId]" style="width: 20px;" disabled="true" /-->
 							</td>
 						</tr>
@@ -61,6 +61,12 @@
 					    		<input id="binaryThreshold" class="form-control" type="number" ng-model="learningCtrl.binaryThreshold.threshold" min="1" max="99" ng-click="learningCtrl.setRecallCondValue()" ng-change="learningCtrl.setRecallCondValue()">
 							</div>
 							<button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button>
+						</form>
+						<form class="form-inline">
+							<div class="form-group" ng-show="progressCtrl.isStage(2)" >
+					    		<label for="chanceOfSynapseDeath">Chance of synapse death</label>
+					    		<input id="chanceOfSynapseDeath" class="form-control" type="number" ng-model="learningCtrl.chanceOfSynapseDeath.chance" min="0.01" max="0.99" step="0.01" ng-change="learningCtrl.killSynapses()">
+							</div>
 						</form>
 						<button ng-show="progressCtrl.isStage(1)" class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
 						<button ng-show="progressCtrl.isStage(1)" class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
