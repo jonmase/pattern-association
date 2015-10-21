@@ -19,11 +19,28 @@ padding: 2px;
 }
 
 th.uncond-row{
-	width: 42px;
+	width: 53px;
 }
 
 td.deadSynapse{
 	background-color: #faa;
+}
+input.table-cell-input{
+	border: none;
+	background-color: #fff;
+	text-align: center; 
+	width: 20px;
+}
+
+.highlight
+{
+	text-decoration: none;
+	color: #001680;
+	text-shadow: 0px 0px 4px #09f;
+	-webkit-transition: 500ms ease-out 0s;
+	-moz-transition: 500ms ease-out 0s;
+	-o-transition: 500ms ease-out 0s;
+	transition: 500ms ease-out 0s;
 }
 
 .panel-tabs > li {
