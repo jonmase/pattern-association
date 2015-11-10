@@ -2,3 +2,75 @@ td, th {
 border: 1px solid black;
 padding: 2px;
 }
+.myGrid {
+    width: 100%;
+    height: 500px;
+  }
+/*Panel tabs from : http://bootsnipp.com/snippets/featured/panel-with-tabs*/
+.panel-tabs {
+    position: relative;
+    bottom: 13px;
+    clear:both;
+    border-bottom: 1px solid transparent;
+}
+
+.nav>li.disabled>a {
+    color: #999;
+}
+
+th.uncond-row{
+	width: 53px;
+}
+
+td.deadSynapse{
+	background-color: #faa;
+}
+input.table-cell-input{
+	border: none;
+	background-color: #fff;
+	text-align: center; 
+	width: 20px;
+}
+
+.highlight
+{
+	text-decoration: none;
+	color: #001680;
+	text-shadow: 0px 0px 4px #09f;
+	-webkit-transition: 500ms ease-out 0s;
+	-moz-transition: 500ms ease-out 0s;
+	-o-transition: 500ms ease-out 0s;
+	transition: 500ms ease-out 0s;
+}
+
+.panel-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+
+.panel-tabs > li > a {
+    margin-right: 2px;
+    margin-top: 4px;
+    line-height: .85;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: #ffffff;
+}
+
+.panel-tabs > li > a:hover {
+    border-color: transparent;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.panel-tabs > li.active > a,
+.panel-tabs > li.active > a:hover,
+.panel-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: rgba(255,255,255, .23);
+    border-bottom-color: transparent;
+}
