@@ -1,5 +1,6 @@
 # pattern-association
 Simulation of pattern association in neural networks
+![Working model](https://github.com/theotherdy/pattern-association/blob/master/PatternAssociation.png "Working model")
 ##Theory
 Based on Daniel Walter's Lecture notes: https://github.com/jonmase/pattern-association/blob/master/content/files/Lecture3.pdf (slide 13 onwards for the most relevant parts)
 ##Style Guide
