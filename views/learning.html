@@ -7,10 +7,10 @@
 	<div class="col-sm-12">
 		<div class="panel panel-primary">
 		  	<div class="panel-heading">
-		    	<h3 class="panel-title">Neuron
+		    	<h3 class="panel-title">Network
 		    	<span class="pull-right">
 			    	<ul class="nav panel-tabs">
-					  	<li role="presentation" ng-class="{active: progressCtrl.isStage(1)}"><a ng-click="progressCtrl.setStage(1)" href="#">Learn</a></li>
+					  	<li role="presentation" ng-class="{active: progressCtrl.isStage(1)}"><a ng-click="progressCtrl.setStage(1); learningCtrl.resetSynapseDeath()" href="#">Learn</a></li>
 					  	<li role="presentation" ng-class="{active: progressCtrl.isStage(2), disabled: learningCtrl.pairs.length==0}"><a ng-click="progressCtrl.setStage(2)" href="#">Recall</a></li>
 					  	<!--li role="presentation"><a href="#">Instructions</a></li-->
 					  	<!--li role="presentation"><a href="#">Setup</a></li-->
@@ -19,6 +19,14 @@
 				</h3>
 			</div>
 		  	<div class="panel-body">
+				<!--div class="alert alert-warning fade in" ng-show="learningCtrl.usingStored">
+		        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		        	<p><strong>Warning!</strong> You are working with an auto-saved network. To begin afresh, click 'Restart'. Note that you will not be able to return to this network and learnt and recalled stimuli will be deleted.<p>
+		        	<div class="text-right">
+		        		<button class="btn btn-default" title="Continue with the saved network" ng-click="learningCtrl.continueWithSaved()">Continue</button>
+		        		<button class="btn btn-default" title="Start again with a naive network" ng-click="learningCtrl.reStart()">Restart</button>
+		        	</div>
+			  	</div-->
 				<div class="table-responsive pull-left">
 					<table class="table table-bordered">
 						<tr ng-show="progressCtrl.isStage(1)"> <!--row for input of unconditioned stimuli -->
@@ -48,12 +56,14 @@
 							</th>
 							<td ng-class="{deadSynapse: learningCtrl.synapses.saved[condId][uncondId].alive==0}" class="text-center" ng-repeat="(uncondId, synapseValue) in learningCtrl.synapses.temp[condId] track by $index">
 								<!--{{learningCtrl.synapses.temp[condId][uncondId].state}}-->
-								<input type="text" class="table-cell-input" ng-model="learningCtrl.synapses.temp[condId][uncondId].state" highlight-on-change="learningCtrl.synapses.temp[condId][uncondId].state" disabled="true"/>
+								<input ng-class="{deadSynapse: learningCtrl.synapses.saved[condId][uncondId].alive==0}" type="text" class="table-cell-input" ng-model="learningCtrl.synapses.saved[condId][uncondId].state" highlight-on-change="learningCtrl.synapses.saved[condId][uncondId].state" disabled="true"/>
+								<a ng-show="progressCtrl.isStage(2) && learningCtrl.synapses.saved[condId][uncondId].alive==0" class="synapse-control" ng-click="learningCtrl.toggleSynapseState(condId,uncondId)"><i class="fa fa-check pull-right fa-in-table"></i></a>
+								<a ng-show="progressCtrl.isStage(2) && learningCtrl.synapses.saved[condId][uncondId].alive==1"class="synapse-control" ng-click="learningCtrl.toggleSynapseState(condId,uncondId)"><i class="fa fa-times pull-right fa-in-table"></i></a>
 							</td>
 						</tr>
 					</table>
 				</div>
-				<div class="panel panel-primary pull-right">
+				<div class="panel col-sm-6 panel-primary pull-right">
 				  	<div class="panel-body">
 				    	<form class="form-horizontal">
 							<div class="form-group" ng-show="progressCtrl.isStage(2)">
@@ -65,19 +75,27 @@
 							<div class="form-group" ng-show="progressCtrl.isStage(2)">
 					    		<label class="col-sm-7 control-label" for="chanceOfSynapseDeath">Chance of synapse death</label>
 					    		<div class="col-sm-5">
-					    			<input id="chanceOfSynapseDeath" class="form-control" type="number" ng-model="learningCtrl.chanceOfSynapseDeath.chance" min="0.00" max="0.99" step="0.01" ng-change="learningCtrl.killSynapses()">
+					    			<div class="input-group">
+					    				<input id="chanceOfSynapseDeath" class="form-control" type="number" ng-model="learningCtrl.chanceOfSynapseDeath.chance" min="0.00" max="0.99" step="0.01">
+					    				<span class="input-group-btn">
+					    					<button ng-show="progressCtrl.isStage(2)" class="btn btn-default" type="submit" ng-click="learningCtrl.killSynapses()">Kill</button>
+					    				</span>		
+					    			</div>
 					    		</div>
-							</div>
+					    	</div>
 							<div class="form-group" ng-show="progressCtrl.isStage(2)">
 								<div class="col-sm-offset-7 col-sm-5">
 									<button ng-show="progressCtrl.isStage(2)" class="btn btn-primary" type="submit" ng-click="learningCtrl.recall();">Save recall</button>
 								</div>
 							</div>
+							<div class="form-group" ng-show="progressCtrl.isStage(1)">
+								<div class="pull-right">
+									<button class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
+									<button class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
+								</div>
+							</div>
 						</form>
-						<button ng-show="progressCtrl.isStage(1)" class="btn btn-default" type="submit" ng-click="learningCtrl.clearStimuli();">Clear Stimuli</button>
-						<button ng-show="progressCtrl.isStage(1)" class="btn btn-primary" type="submit" ng-click="learningCtrl.learnStimuli();">Learn Stimuli</button>
-						
-				  	</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -91,7 +109,7 @@
     			<h3 class="panel-title">Learnt and recalled stimuli</h3>
   			</div>
   			<div class="panel-body">
-    			<p>Learnt stimuli will appear automatically. When in <strong>Recall</strong> mode, repopulate the neuron with learnt stimuli by clicking the <button class="btn btn-default btn-xs">Recall</button> button. Click the <i class="ui-grid-icon-plus-squared"></i> to see recall attempts.</p>
+    			<p>Learnt stimuli will appear automatically. When in <strong>Recall</strong> mode, repopulate the network with learnt stimuli by clicking the <button class="btn btn-default btn-xs">Recall</button> button. Click the <i class="ui-grid-icon-plus-squared"></i> to see recall attempts.</p>
     			<div id="grid1" ui-grid="learningCtrl.gridOptions" ui-grid-expandable class="myGrid"></div>
   			</div>
 		</div>
