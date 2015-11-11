@@ -15,6 +15,8 @@
 		//vm.recallPairs = learningFactory.getRecallStimulusPairs();
 		vm.binaryThreshold = learningFactory.getBinaryThreshold();
 		vm.chanceOfSynapseDeath = learningFactory.getChanceOfSynapseDeath();
+		vm.noOfDeadSynapses = learningFactory.getNoOfDeadSynapses();
+		//vm.usingStored = learningFactory.getUsingStored();
 		
 		//Bindable Members - methods
 		vm.clearStimuli = clearStimuli;
@@ -26,6 +28,10 @@
 		vm.hasLearnt = hasLearnt;
 		vm.killSynapses = killSynapses;
 		$scope.attemptRecall = attemptRecall; //note had to apply this to scope as ui-grid can only speak to its containing scope through grid.appScope below 
+		vm.toggleSynapseState = toggleSynapseState;
+		vm.resetSynapseDeath = resetSynapseDeath;
+		//vm.reStart = reStart;
+		//vm.continueWithSaved = continueWithSaved;
 
 		vm.gridOptions = {
         	expandableRowTemplate: 'views/expandableRowTemplate.html',
@@ -41,6 +47,7 @@
 				        		{field:"firing_rate"},
 				        		{field:"binary_threshold"},
 				        		{field:"chance_of_synapse_death"},
+				        		{field:"no_of_dead_synapses"},
 				        		{
             						field:"matched",
             						cellTemplate: '<div class="ui-grid-cell-contents"><i class=\'fa fa-{{ row.entity.matched=="true"?"check":"times" }} fa-lg\'></i></div>'
@@ -64,7 +71,7 @@
       	];
 
       	vm.gridOptions.data = vm.pairs;
-		
+
 		//Actions	
 		learningFactory.setAllSynapseValues();	//Set all the synapse values based on the initial stimuli
 
@@ -107,5 +114,17 @@
 		function attemptRecall(conditioned) {
 			learningFactory.attemptRecall(conditioned);
 		};
+		function toggleSynapseState(condId,uncondId){
+			learningFactory.toggleSynapseState(condId,uncondId);
+		};
+		function resetSynapseDeath(){
+			learningFactory.resetSynapseDeath();
+		}
+		/*function reStart(){
+			learningFactory.reStart();
+		}
+		function continueWithSaved(){
+			learningFactory.continueWithSaved();
+		}*/
 	};
 })();

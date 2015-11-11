@@ -1,6 +1,6 @@
 (function() {
 	//var app = angular.module('pattern', ['pattern.learning', 'pattern.recall']);
-	var app = angular.module('pattern', ['frapontillo.bootstrap-switch','ui.grid', 'ui.grid.expandable']);
+	var app = angular.module('pattern', ['frapontillo.bootstrap-switch','ui.grid', 'ui.grid.expandable','ngCookies']);
 	app.directive('highlightOnChange', ['$timeout', function($timeout) {
 		return {
 		    restrict: 'A',

@@ -22,14 +22,27 @@ th.uncond-row{
 	width: 53px;
 }
 
-td.deadSynapse{
-	background-color: #faa;
+.deadSynapse{
+	background-color: #faa !important;
+	color: #e99;
 }
+
 input.table-cell-input{
 	border: none;
 	background-color: #fff;
 	text-align: center; 
 	width: 20px;
+}
+
+i.fa-in-table{
+	margin-right: -6px;
+	margin-top: -6px;
+}
+a.synapse-control{
+	color: #ccc;
+}
+a.synapse-control:hover{
+	color: #333;
 }
 
 .highlight

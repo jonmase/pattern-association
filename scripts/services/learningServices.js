@@ -2,23 +2,42 @@
 	angular.module('pattern')
 		.factory('learningFactory', learningFactory);
 		
-	//learningFactory.$inject = ['rows', 'cols', 'binary_threshold'];
-
-	//function learningFactory(rows, cols, binary_threshold) {
-
 	learningFactory.$inject = ['rows', 'cols'];
+	//learningFactory.$inject = ['rows', 'cols', '$cookies'];
 
+	//function learningFactory(rows, cols, $cookies) {
 	function learningFactory(rows, cols) {
 		//Variables
-		//var stimuli = initialiseStimuli();	//For production, start with blank stimuli
-		var stimuli = initialiseRandomStimuli();	//For development, start with some random stimuli set
-		var synapses = initialiseSynapses();	//Set up the blank synapses array
-		var stimulusPairs = initialiseStimulusPairs();	//Set up the stimulus pairs array
-		var recallStimuli = initialiseRecallStimuli();	//Create empty array for stimuli
-		//var recallStimulusPairs = initialiseStimulusPairs();  //Set up the recalledStimulus pairs array
+		
+		//var storedNetwork = null;
+		//var usingStored=false;
+		var stimuli = null;
+		var synapses = null;
+		var stimulusPairs = null;
+		var recallStimuli = null;
+		var binaryThreshold = null;
+		var chanceOfSynapseDeath = null;
+		var noOfDeadSynapses = null;
 
-		var binaryThreshold = initialiseBinaryThreshold();
-		var chanceOfSynapseDeath = initialiseChanceOfSynapseDeath();
+		//if($cookies.get("stimuli")){
+			//stimuli = $cookies.get("stimuli");
+			//synapses = $cookies.get("synapses");
+			//stimulusPairs = $cookies.get("stimulusPairs");
+			//recallStimuli = $cookies.get("recallStimuli");
+			//binaryThreshold = $cookies.get("binaryThreshold");
+			//chanceOfSynapseDeath = $cookies.get("chanceOfSynapseDeath");
+			//usingStored=true;
+			//}
+		//else{
+			stimuli = initialiseRandomStimuli();	//For development, start with some random stimuli set
+			synapses = initialiseSynapses();	//Set up the blank synapses array
+			stimulusPairs = initialiseStimulusPairs();	//Set up the stimulus pairs array
+			recallStimuli = initialiseRecallStimuli();	//Create empty array for stimuli
+			binaryThreshold = initialiseBinaryThreshold();
+			chanceOfSynapseDeath = initialiseChanceOfSynapseDeath();
+			noOfDeadSynapses = initialiseNoOfDeadSynapses();
+			//}
+		
 
 		//Exposed Methods
 		var factory = {
@@ -28,17 +47,22 @@
 			getSynapses: getSynapses,
 			getBinaryThreshold: getBinaryThreshold,
 			getChanceOfSynapseDeath: getChanceOfSynapseDeath,
+			getNoOfDeadSynapses: getNoOfDeadSynapses,
+			getRecallStimuli: getRecallStimuli,
+			//getUsingStored: getUsingStored,
 			learnStimuli: learnStimuli,
 			setAllSynapseValues: setAllSynapseValues,
 			setCondValue: setCondValue,
 			setUncondValue: setUncondValue,
 			setRecallCondValue: setRecallCondValue,
 			recall: recall,
-			getRecallStimuli: getRecallStimuli,
-			//getRecallStimulusPairs: getRecallStimulusPairs,
 			hasLearnt: hasLearnt,
 			killSynapses: killSynapses,
-			attemptRecall: attemptRecall
+			attemptRecall: attemptRecall,
+			toggleSynapseState: toggleSynapseState,
+			resetSynapseDeath: resetSynapseDeath,
+			//reStart:reStart,
+			//continueWithSaved:continueWithSaved
 		};
 		return factory;
 		
@@ -67,6 +91,10 @@
 			return stimulusPairs;
 		};
 
+		/*function getUsingStored() { 
+			return usingStored;
+		};*/
+
 		/*function getRecallStimulusPairs() { 
 			return recallStimulusPairs;
 		};*/
@@ -76,6 +104,7 @@
 		};
 
 		function getBinaryThreshold() { 
+			//$cookies.put('binaryThreshold',binaryThreshold);
 			return binaryThreshold;
 		};
 		
@@ -85,12 +114,23 @@
 		};
 
 		function getChanceOfSynapseDeath() { 
+			//$cookies.put('chanceOfSynapseDeath',chanceOfSynapseDeath);
 			return chanceOfSynapseDeath;
 		};
 		
 		function initialiseChanceOfSynapseDeath(){
 			var chanceOfSynapseDeath={chance:0.00};
 			return chanceOfSynapseDeath;
+		};
+
+		function getNoOfDeadSynapses() { 
+			//$cookies.put('chanceOfSynapseDeath',chanceOfSynapseDeath);
+			return noOfDeadSynapses;
+		};
+		
+		function initialiseNoOfDeadSynapses(){
+			var noOfDeadSynapses={number:0};
+			return noOfDeadSynapses;
 		};
 
 		//Set some of the stimuli at random
@@ -185,6 +225,7 @@
 				conditioned: angular.copy(stimuli.conditioned),
 				recalledPairs:[]
 			});
+			//$cookies.put('stimulusPairs',stimulusPairs);
 			saveCurrentSynapseValues();
 			clearStimuli();
 		};
@@ -207,6 +248,7 @@
 						firing_rate: angular.copy(recallStimuli.firing_rate),
 						binary_threshold: binaryThreshold.threshold,
 						chance_of_synapse_death: chanceOfSynapseDeath.chance,
+						no_of_dead_synapses: noOfDeadSynapses.number,
 						matched: matched
 						});
 					}
@@ -232,10 +274,12 @@
 					firing_rate: angular.copy(recallStimuli.firing_rate),
 					binary_threshold: binaryThreshold.threshold,
 					chance_of_synapse_death: chanceOfSynapseDeath.chance,
+					no_of_dead_synapses: noOfDeadSynapses.number,
 					matched: "false" //can't match an unlearnt stimulus
 					});
 
 				}
+			//$cookies.put('stimulusPairs',stimulusPairs);
 		};
 
 		//Clear the stimuli and reset the synapses to their saved values
@@ -250,18 +294,21 @@
 			for(var uncondId = 0; uncondId < recallStimuli.firing_rate.length; uncondId++) {
 				recallStimuli.firing_rate[uncondId] = 0;
 				}
+			//$cookies.put('recallStimuli',recallStimuli);
 		};
 
 
 		//Save the current values of the synapses
 		function saveCurrentSynapseValues() {
 			synapses.saved = angular.copy(synapses.temp);
+			//$cookies.put('synapses',synapses);
 			//For each synapse, copy the temp value into the saved array
 			/*for(var condId = 0; condId < synapses.temp.length; condId++) {
 				for(var uncondId = 0; uncondId < synapses.temp[condId].length; uncondId++) {
 					synapses.saved[condId][uncondId] = synapses.temp[condId][uncondId];
 				}
 			}*/
+
 		};
 		
 		//Update all the synapse values
@@ -282,10 +329,14 @@
 
 		//Calculate firing rates and activations
 		function setRecallCondValue() {
+			noOfDeadSynapses.number = 0;
 			for(var uncondId = 0; uncondId < cols; uncondId++) {
 				recallStimuli.activation[uncondId] = 0;
 				recallStimuli.firing_rate[uncondId]= 0;
 				for(var condId = 0; condId < rows; condId++) {	
+					if(synapses.saved[condId][uncondId].alive==0){
+						noOfDeadSynapses.number++;
+						}
 					if(recallStimuli.conditioned[condId]){
 						if(synapses.saved[condId][uncondId].alive==1){ //ie only count 'alive' synapses
 							recallStimuli.activation[uncondId]+= synapses.saved[condId][uncondId].state;
@@ -298,6 +349,8 @@
 					}
 				}		
 			}
+			//$cookies.put('synapses',synapses);
+			//$cookies.put('recallStimuli',recallStimuli);
 		};
 		
 		//Set the value of an unconditional stimulus
@@ -310,6 +363,7 @@
 		//Set a synapse value by adding the result of the current stimuli to the saved value
 		function setSynapseValue(condId, uncondId) {
 			synapses.temp[condId][uncondId].state = synapses.saved[condId][uncondId].state + stimuli.unconditioned[uncondId] * stimuli.conditioned[condId];
+			//$cookies.put('synapses',synapses);
 		};
 
 		//Do we have at least one saved learn?
@@ -326,5 +380,38 @@
 			recallStimuli.conditioned = angular.copy(conditioned);
 			setRecallCondValue();
 		}
+
+		function toggleSynapseState(condId,uncondId){
+			if(synapses.saved[condId][uncondId].alive==1){
+				synapses.saved[condId][uncondId].alive=0;
+				}
+			else{
+				synapses.saved[condId][uncondId].alive=1;
+				}	
+			setRecallCondValue();
+		}
+
+		function resetSynapseDeath(){
+			for(var i = 0; i < rows; i++) {
+				for(var j = 0; j < cols; j++) {
+					synapses.saved[i][j].alive=1;
+				}
+			}
+			setRecallCondValue();	
+		}
+
+		/*function reStart(){
+			$cookies.remove("stimuli");
+			$cookies.remove("synapses");
+			$cookies.remove("stimulusPairs");
+			$cookies.remove("recallStimuli");
+			$cookies.remove("binaryThreshold");
+			$cookies.remove("chanceOfSynapseDeath");
+			location.reload();
+			};
+		
+		function continueWithSaved(){
+			usingStored=false; //to hide warning about saved version
+			};*/
 	}
 })();
